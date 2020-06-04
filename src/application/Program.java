@@ -25,32 +25,36 @@ public class Program {
 				System.out.println();
 				System.out.print("Source: ");
 				ChessPosition source = UI.readChessPosition(sc);
-				
+
 				boolean[][] possibleMoves = match.possibleMoves(source);
 				UI.clearScreen();
 				UI.printBoard(match.getPieces(), possibleMoves);
-				
+
 				System.out.println();
 				System.out.print("Target: ");
 				ChessPosition target = UI.readChessPosition(sc);
 
 				ChessPiece capturedPiece = match.performChessMove(source, target);
-				if(capturedPiece != null) {
+				if (capturedPiece != null) {
 					captured.add(capturedPiece);
 				}
-				if(match.getPromoted() != null) {
+				if (match.getPromoted() != null) {
 					System.out.print("Enter a piece for promotion(B/N/R/Q): ");
-					String type = sc.nextLine();
+					String type = sc.nextLine().toUpperCase();
+					while(!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")) {
+						System.out.print("Invalid type! Enter a piece for promotion(B/N/R/Q): ");
+						type = sc.nextLine().toUpperCase();
+					}
 					match.replacePromotedPiece(type);
 				}
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();
+			} catch (InputMismatchException e) {
+				System.out.println(e.getMessage());
+				sc.nextLine();
 			}
-			 catch (InputMismatchException e) {
-					System.out.println(e.getMessage());
-					sc.nextLine();
-				}
+
 		}
 		UI.clearScreen();
 		UI.printMatch(match, captured);
